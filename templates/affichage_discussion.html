@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Forum</title>
+    <style>
+        /*Style d'écriture et d'espacement pour toute la page*/
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #ffffff;
+            color: white;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgb(255, 255, 255);
+            padding: 10px 20px;
+            color: black;
+            font-weight: bold;
+        }
+
+        .logo, .logo a, .icon a {
+            font-size: 16px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #333;
+            border-radius: 20px;
+            padding: 5px 10px;
+        }
+
+        .search-bar:hover {
+            background-color: rgb(255, 0, 0);
+        }
+
+        .navbar input {
+            background: none;
+            border: none;
+            color: white;
+            padding: 5px;
+        }
+
+        .navbar input:hover {
+            color: black;
+        }
+
+        .navbar .icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .container {
+            display: flex;
+            height: 645px;
+        }
+
+        .messages {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .message-list {
+            width: 30%;
+            background: #000000;
+            border-radius: 10px;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 100%; /* garde la hauteur fixe */
+        }
+
+        .message-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .message-item:hover {
+            background: #8f5f5f;
+        }
+
+        img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .message-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-box {
+    flex: 1;
+    background: #000000;
+    border-radius: 10px;
+    position: relative; /* Ajoute ça */
+    overflow-y: auto;
+    padding-bottom: 60px; /* Pour laisser de la place au champ de réponse */
+}
+
+
+        canvas {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    .reply-form {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    padding: 10px 15px;
+    background-color: #1e1e1e;
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid #333;
+}
+
+.reply-form input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background-color: #2e2e2e;
+    color: white;
+}
+
+.reply-form input[type="text"]::placeholder {
+    color: #bbb;
+}
+
+.reply-form button {
+    background-color: #444;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.reply-form button:hover {
+    background-color: #666;
+}
+
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="logo"><a href="/"> <img src="/static/logo.jpg" alt="Logo"> </a></div>
+    <div class="search-bar"><input type="text" placeholder="Rechercher"></div>
+    <div class="icons">
+        <span class="icon"> <a href="">Notifications</a></span>
+        <span class="icon"><a href="/profil">Profil</a></span>
+    </div>
+</div>
+
+<!-- Container -->
+<div class="container">
+
+
+       <!-- Liste des discussions -->
+        <div class="message-list">
+            <h3>Discussions</h3>
+            <form action="/create_thread" method="POST">
+                <input type="hidden" name="user_id" value="{{.UserID}}">
+                <input type="text" name="title" placeholder="Titre de la discussion" required>
+                <button type="submit">➕ Créer</button>
+            </form>
+
+            {{range .Threads}}
+            <div class="message-item">
+                {{if .ImageBase64}}
+                <canvas id="canvas-{{.ID}}"></canvas>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        let img = new Image();
+                        img.src = "{{.ImageBase64}}";
+                        img.onload = function () {
+                            let canvas = document.getElementById("canvas-{{.ID}}");
+                            if (canvas) {
+                                let ctx = canvas.getContext("2d");
+                                canvas.width = 40;
+                                canvas.height = 40;
+                                ctx.beginPath();
+                                ctx.arc(20, 20, 20, 0, Math.PI * 2);
+                                ctx.closePath();
+                                ctx.clip();
+                                ctx.drawImage(img, 0, 0, 40, 40);
+                            }
+                        };
+                    });
+                </script>
+                {{end}}
+                <a href="#" onclick="loadThread('{{.ID}}'); return false;">{{.Title}}</a>
+                <span>{{.Username}}</span>
+            </div>
+            {{end}}
+        </div>
+        <!-- Boîte de discussion -->
+        <div class="chat-box" id="chat-box">
+            <p>Sélectionnez une discussion pour voir les messages ici.</p>
+
+
+        </div>
+    
+</div>
+
+<!-- JS AJAX -->
+<script>
+function loadThread(threadID) {
+    fetch('/get_thread?id=' + threadID)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur serveur");
+            }
+            return response.text();
+        })
+        .then(html => {
+            document.getElementById("chat-box").innerHTML = html;
+
+            // Met à jour le champ hidden du formulaire
+            const threadInput = document.getElementById("reply-thread-id");
+            if (threadInput) threadInput.value = threadID;
+        })
+        .catch(error => {
+            document.getElementById("chat-box").innerHTML = "Désolé vous devez etre connecté pour voir les message pour la confidentialité de nos utilisateur";
+            console.error(error);
+        });
+
+    }
+
+</script>
+<script>
+    function submitReply(event) {
+        event.preventDefault();
+    
+        const form = document.getElementById("reply-form");
+        const threadID = document.getElementById("reply-thread-id").value;
+        const formData = new FormData(form);
+    
+        fetch("/reply", {
+            method: "POST",
+            body: formData,
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error("Erreur lors de l'envoi");
+            }
+            // Recharge le thread pour voir la réponse
+            loadThread(threadID);
+            form.reset();
+        })
+        .catch(err => {
+            alert("Erreur lors de l'envoi de la réponse");
+            console.error(err);
+        });
+    }
+    </script>
+    <style>
+        .message-list {
+            max-height: 100vh;
+            overflow-y: auto;
+            background-color: #1e1e1e;
+            border-right: 1px solid #333;
+            padding: 20px;
+            width: 300px;
+        }
+    
+        .message-list h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            text-align: center;
+            color: white;
+        }
+    
+        .message-list form {
+            margin-bottom: 20px;
+        }
+    
+        .message-list input[type="text"] {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            width: 100%;
+            margin-bottom: 8px;
+            background-color: #2e2e2e;
+            color: white;
+        }
+    
+        .message-list button {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            width: 100%;
+        }
+    
+        .message-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #2a2a2a;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: background-color 0.2s;
+        }
+    
+        .message-item:hover {
+            background-color: #383838;
+        }
+    
+        .message-item canvas {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+    
+        .message-item a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+    
+        .message-item a:hover {
+            text-decoration: underline;
+        }
+    
+        .message-item span {
+            color: #aaa;
+            font-size: 0.9em;
+        }
+    </style>
+
+</body>
+</html>
+
+</body>
+</html>

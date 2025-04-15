@@ -1,0 +1,444 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <link rel="shortcut icon" href="../static/logo.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="../static/forum_choix.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum</title>
+</head>
+<body>
+  
+    <header>
+        <h1> Bienvenue sur le Forum </h1>
+    </header>
+    
+    <!-- Affichage du nom et de l'avatar -->
+    <p class="nom">{{.Nom }}</p>
+    <div class="user-profile">
+        <canvas id="canvas" width="100" height="100"></canvas>
+        <script>
+          let img = new Image();
+          img.src = "{{.Avatar}}"; // Utilisation de l'image Base64
+        
+          img.onload = function() {
+            let ctx = document.getElementById("canvas").getContext("2d");
+            ctx.drawImage(img, 0, 0, 100, 100);
+          };
+        
+          img.onerror = function() {
+            console.error("Erreur de chargement de l'image.");
+          };
+        </script>
+    </div>
+
+ 
+  
+    <div class="navbar">
+        <a href="Notifications.html">Notifications</a>
+        <a href="/forum">Messages</a>
+        <a href="/add-post">Créer</a>
+        <a href="Page_profil.html">Profil</a>
+    </div>
+
+
+
+
+    
+    <div class="floating-menu">
+        <a href= "/login">Se connecter</a>
+        <a href="/register">S'inscrire</a>
+        <form action="/logout" method="POST">
+            <input type="hidden" name="session_id" value="{{.SessionID}}">
+            <button type="submit">Déconnexion</button>
+        </form>
+        
+    </div>
+
+    <h2>📝 Derniers Posts :</h2>
+    <!-- Barre de boutons pour filtrer les posts -->
+    <div id="category-buttons">
+        
+        <button class="category-btn" data-category="cybersécurité">Cybersécurité</button>
+        <button class="category-btn" data-category="programmation">Programmation</button>
+        <button class="category-btn" data-category="actualités">Actualités</button>
+        <button class="category-btn" data-category="autre">Autre</button>
+    </div>
+
+    <!-- Affichage des posts -->
+    <div id="posts-container">
+        {{range .Posts}}
+        <div class="post">
+     <!-- Image de l'utilisateur -->
+     {{if .ImageUsers}}
+     <canvas id="user-canvas-{{.ID}}" class="user-image"></canvas>
+     <script>
+       document.addEventListener("DOMContentLoaded", function () {
+         let imgSrc = "{{.ImageUsers}}";
+         if (imgSrc && imgSrc !== "null" && imgSrc !== "") {
+           let img = new Image();
+           img.src = imgSrc;
+           img.onload = function () {
+             let canvas = document.getElementById("user-canvas-{{.ID}}");
+             if (canvas) {
+               let ctx = canvas.getContext("2d");
+               canvas.width = 50;  // Taille personnalisée
+               canvas.height = 50;
+               ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+             }
+           };
+           img.onerror = function () {
+             console.error("❌ Erreur de chargement de l'image utilisateur pour le post {{.ID}}.");
+           };
+         }
+       });
+     </script>
+      {{end}}
+          {{if .Image}}
+                <canvas id="canvas-{{.ID}}"></canvas>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        let imgSrc = "{{.Image}}";
+                        if (imgSrc && imgSrc !== "null" && imgSrc !== "") { 
+                            let img = new Image();
+                            img.src = imgSrc;
+                            img.onload = function() {
+                                let canvas = document.getElementById("canvas-{{.ID}}");
+                                if (canvas) {
+                                    let ctx = canvas.getContext("2d");
+                                    canvas.width = img.width;
+                                    canvas.height = img.height;
+                                    ctx.drawImage(img, 0, 0, img.width, img.height);
+                                }
+                            };
+                            img.onerror = function() {
+                                console.error("❌ Erreur de chargement de l'image pour le post {{.ID}}.");
+                            };
+                        }
+                    });
+                </script>
+            {{end}}
+            <h3 class="utilisateur">{{.Username}}</h3>
+            <p class="contenu">{{.Content}}</p>
+            <p class="category"><small>Catégorie : {{.Category}}</small></p>
+            <p><small>Posté le {{.CreatedAt}}</small></p>
+
+  
+            <br>        <!-- affichage des likes , dislike et commentaire -->
+        <div class="actions">
+            <p>{{.Likes}} 👍 | {{.Dislikes}} 👎</p>
+            <form action="/like"  method="POST">
+                <input type="hidden" name="post_id" value="{{.ID}}">
+                
+                
+                <input type="hidden" name="type" value="like">
+                <button type="submit">👍 Like</button>
+            </form>
+            <form action="/like" method="POST">
+                <input type="hidden" name="post_id" value="{{.ID}}">
+            
+
+                <input type="hidden" name="type" value="dislike">
+                <button type="submit">👎 Dislike</button>
+            </form>
+            <a href="/comments?post_id={{.ID}}" class="comment-link">📜 Commentaires</a>
+
+        </div>
+        </div>
+        
+        {{end}}
+    </div>
+
+<script>
+    document.querySelectorAll(".category-btn").forEach(button => {
+        button.addEventListener("click", function() {
+            let category = this.getAttribute("data-category");
+            window.location.href = "/posts?category=" + category;
+        });
+    });
+</script>
+  <!-- Modale de consentement des cookies -->
+  <div id="cookieConsent">
+    <p>Ce site utilise des cookies pour améliorer l'expérience utilisateur.</p>
+    <button id="acceptBtn">Accepter</button>
+    <button id="rejectBtn">Refuser</button>
+</div>
+
+<script>
+  window.onload = function() {
+      var cookieConsent = document.getElementById("cookieConsent");
+      var acceptBtn = document.getElementById("acceptBtn");
+      var rejectBtn = document.getElementById("rejectBtn");
+
+      // Vérifier si l'utilisateur a déjà accepté ou refusé DANS CETTE SESSION
+      if (!sessionStorage.getItem("cookieConsentDisplayed")) {
+          cookieConsent.style.display = "block";
+          sessionStorage.setItem("cookieConsentDisplayed", "true"); // Marquer comme affiché
+      }
+
+      // Action lorsque l'utilisateur clique sur "Accepter"
+      acceptBtn.onclick = function() {
+          localStorage.setItem("cookieConsent", "accepted");
+          cookieConsent.style.display = "none";
+          alert("Cookies acceptés !");
+      };
+
+      // Action lorsque l'utilisateur clique sur "Refuser"
+      rejectBtn.onclick = function() {
+          localStorage.setItem("cookieConsent", "rejected");
+          cookieConsent.style.display = "none";
+          alert("Cookies refusés !");
+      };
+  };
+</script>
+
+
+<style>
+            /* Style de la modale */
+            #cookieConsent {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            display: none;
+            width: 300px;
+            text-align: center;
+            z-index: 1000;
+        }
+        #cookieConsent button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #acceptBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #rejectBtn {
+            background-color: #f44336;
+            color: white;
+        }
+        /*Fond de page blanc*/
+/* Styles généraux */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9fafb;
+  margin: 0;
+  padding: 0;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+}
+
+/* En-tête */
+header {
+  background-color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #4f46e5;
+}
+
+/* Profil utilisateur */
+.nom {
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  color: #1f2937;
+  margin-top: 1rem;
+}
+
+.user-profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.user-profile canvas {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: #e5e7eb;
+}
+
+/* Barre de navigation */
+.navbar {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  background-color: #4f46e5;
+  padding: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.navbar a:hover {
+  color: #c7d2fe;
+}
+
+/* Menu flottant */
+.floating-menu {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
+
+.floating-menu a,
+.floating-menu button {
+  display: block;
+  color: #374151;
+  text-decoration: none;
+  transition: color 0.2s;
+  margin-bottom: 0.75rem;
+}
+
+.floating-menu a:hover {
+  color: #4f46e5;
+}
+
+.floating-menu button[type="submit"] {
+  color: #dc2626;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.floating-menu button[type="submit"]:hover {
+  color: #b91c1c;
+}
+
+/* Section des posts */
+h2 {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 1.5rem;
+}
+
+#category-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.category-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background-color: #e0e7ff;
+  color: #4338ca;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.category-btn:hover {
+  background-color: #c7d2fe;
+}
+
+#posts-container {
+  max-width: 80rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.post {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.post h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.post .contenu {
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+.category {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+}
+
+.actions form {
+  display: inline;
+}
+
+.actions a {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+
+.actions a:hover {
+  color: #4f46e5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .category-buttons {
+    flex-wrap: wrap;
+  }
+
+  .navbar {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .floating-menu {
+    position: static;
+    margin: 1rem auto;
+  }
+}
+
+
+    </style>
+
+</body>
+</html>

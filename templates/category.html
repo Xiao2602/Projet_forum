@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts - {{.Category}}</title>
+</head>
+<body>
+    <div id="category-buttons">
+    
+        <button class="category-btn" data-category="cybersécurité">Cybersécurité</button>
+        <button class="category-btn" data-category="programmation">Programmation</button>
+        <button class="category-btn" data-category="actualités">Actualités</button>
+        <button class="category-btn" data-category="autre">Autre</button>
+    </div>
+    <script>
+        document.querySelectorAll(".category-btn").forEach(button => {
+            button.addEventListener("click", function() {
+                let category = this.getAttribute("data-category");
+                window.location.href = "/posts?category=" + category;
+            });
+        });
+    </script>
+    <h1>Posts dans la catégorie : {{.Category}}</h1>
+
+    {{if eq (len .Posts) 0}}
+        <p>Aucun post trouvé dans cette catégorie.</p>
+    {{else}}
+        <ul>
+            {{range .Posts}}
+                <li>
+                    <h2>{{.Title}}</h2>
+                    <p>{{.Content}}</p>
+                    <p><strong>Publié par :</strong> {{.Username}}</p>
+                    <p><strong>le :</strong> {{.CreatedAt}}</p>
+                    <div id="post-{{.ID}}-image"></div> <!-- Container pour l'image -->
+
+                    <script>
+                        // Vérifie si l'image existe et l'ajoute dynamiquement
+                        const postImage = "{{.Image}}";
+                        const postId = "{{.ID}}";
+                        if (postImage) {
+                            const imageElement = document.createElement("img");
+                            imageElement.src = postImage;
+                            imageElement.alt = "Image du post";
+                            imageElement.style.maxWidth = "300px";
+                            imageElement.style.height = "auto";
+            
+                            // Ajoute l'image au container du post
+                            document.getElementById(`post-${postId}-image`).appendChild(imageElement);
+                        } else {
+                            const noImageMessage = document.createElement("p");
+                            noImageMessage.innerText = "Aucune image";
+                            document.getElementById(`post-${postId}-image`).appendChild(noImageMessage);
+                        }
+                    </script>
+            
+                    <hr>
+                </div>
+                </li>
+
+            {{end}}
+        </ul>
+    {{end}}
+    <a href="/">Retour à la page principale</a>
+    <style>
+                    /* Style général */
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f8f9fa;
+                margin: 0;
+                padding: 0;
+                text-align: center;
+            }
+
+            #category-buttons {
+                max-width: 800px;
+                margin: 20px auto;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            h1 {
+                color: #343a40;
+                font-size: 24px;
+            }
+
+            /* Liste des posts */
+            ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            li {
+                background: #ffffff;
+                border-radius: 8px;
+                padding: 15px;
+                margin-bottom: 15px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                text-align: left;
+            }
+
+            h2 {
+                color: #007bff;
+                font-size: 20px;
+                margin-bottom: 5px;
+            }
+
+            p {
+                color: #495057;
+                font-size: 14px;
+            }
+
+            /* Style pour l'image du post */
+            #category-buttons img {
+                max-width: 100%;
+                border-radius: 5px;
+                margin-top: 10px;
+            }
+
+            /* Ligne de séparation */
+            hr {
+                border: none;
+                height: 1px;
+                background-color: #ddd;
+                margin: 15px 0;
+            }
+
+            /* Lien retour */
+            a {
+                display: inline-block;
+                padding: 10px 15px;
+                background-color: #007bff;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                transition: background 0.3s;
+            }
+
+            a:hover {
+                background-color: #0056b3;
+            }
+
+            /* Responsive */
+            @media (max-width: 600px) {
+                #category-buttons {
+                    width: 90%;
+                }
+                h1 {
+                    font-size: 20px;
+                }
+                h2 {
+                    font-size: 18px;
+                }
+                p {
+                    font-size: 12px;
+                }
+            }
+
+
+        .category-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        background-color: #e0e7ff;
+        color: #4338ca;
+        transition: background-color 0.2s;
+        border: none;
+        cursor: pointer;
+        }
+
+        .category-btn:hover {
+        background-color: #c7d2fe;
+        }
+    </style>
+</body>
+</html>

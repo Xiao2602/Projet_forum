@@ -1,0 +1,123 @@
+/*Fond de page blanc*/
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/*Bandes à droite et à gauche de la page*/
+body::before, body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    width: 150px; /* Largeur des bandes */
+    height: 702px; /* Toute la hauteur de l'écran */
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: -1; /* Derrière le contenu */
+}
+
+/*Bord gauche*/
+body::before {
+    left: 0;
+    background-image: url('../static/fond_forum.avif'); /* Image de gauche */
+}
+
+/*Bord droit*/
+body::after {
+    right: 0;
+    background-image: url('../static/fond_forum.avif'); /* Image de droite */
+}
+
+/*H1 au centre avec une bordure pointillé en noir*/
+h1{
+    text-align: center;
+    text-decoration: black underline;
+    border: 2px black dotted;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+/*Ecart du haut de 50pixels pour les sujets de forum aligné en ligne avec un espace entre chaque éléments*/
+.menu-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+/*Sujets de forum en bleu avec bord arrondi et l'écriture en blanc */
+.menu {
+    background-color: #007BFF;
+    color: white;
+    padding: 20px;
+    margin: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 150px;
+    text-align: center;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+/*Sujets de forum en bleu foncé et zoom avant*/
+.menu:hover {
+    background-color: #024287;
+    transform: scale(1.1);
+}
+
+/*Lien sans décoration et blanc avec du gras*/
+.menu a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/*Barre de navigation en ecart égaux avec fond blanc et bordure du dessus en noir*/
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    background: white;
+    width: 100%;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    border-top: 1px solid #000000;
+}
+
+/*Lien de barre de navigation sans décor et écriture noire*/
+.navbar a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+}
+
+/* Menu flottant pour connexion/inscription */
+.floating-menu {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.floating-menu a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    padding: 5px 10px;
+    background-color: #007BFF;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.floating-menu a:hover {
+    background-color: #024287;
+    color: white;
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <link rel="shortcut icon" href="../static/logo.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="../static/Inscription.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Création de compte</title>
+</head>
+<body>
+    <section>
+        <form action="/register" method="post" enctype="multipart/form-data">
+            <h1>Inscription</h1>
+            <div class="inputbox">
+                <ion-icon name="mail-outline"></ion-icon>
+                <input type="text" id="username"  name="username" required>
+                <label for="">Nom</label>
+            </div>
+            <div class="inputbox">
+                <ion-icon name="mail-outline"></ion-icon>
+                <input type="text" id="email"  name="email" required>
+                <label for="">Email</label>
+            </div>
+            <div class="inputbox">
+                <ion-icon name="lock-closed-outline"></ion-icon>
+                <input type="text" id="password"  name="password" required>
+                <label for="">Mot de passe</label>
+            </div>
+            <div class="forget">
+                <label for=""><input type="checkbox">Se souvenir de moi</label>
+              <a href="#">Mot de passe oublier ?</a>
+            </div>
+            <button>S'inscrire</button>
+            <div class="register">
+                <p>Déjà Inscrit ? <a href="/login">Se connecter</a></p>
+            </div>
+            <input type="file" name="image">
+            
+            <input type="button"popovertarget="conditionsPopup" value="Conditions">
+            <!-- Popover contenant les conditions d'utilisation -->
+            <div id="conditionsPopup" popover class="conditions" >
+                <h3>📜 Conditions d'utilisation</h3>
+                <p>Bienvenue sur notre forum ! En vous inscrivant, vous acceptez les règles suivantes :</p>
+                <ul>
+                    <li>🚫 Pas de contenu offensant ou illégal.</li>
+                    <li>🤝 Respectez les autres membres.</li>
+                    <li>🔐 Ne partagez pas d'informations personnelles sensibles.</li>
+                    <li>📌 Les modérateurs peuvent supprimer du contenu inapproprié.</li>
+                </ul>
+                <button popovertarget="conditionsPopup">Fermer</button>
+            </div>
+        </form>
+
+    </section>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+</body>
+</html>

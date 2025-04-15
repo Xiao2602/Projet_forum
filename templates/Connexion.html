@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <link rel="shortcut icon" href="../static/logo.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="../static/connexion_style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion au forum</title>
+</head>
+<body>
+    
+
+        <form action="/login" class="login-form" enctype="multipart/form-data" method="post">
+            <h1 class="login-title">connexion</h1>
+    
+            <div class="input-box">
+                <i class='bx bxs-user'></i>
+                <input type="text" id="email" placeholder=" e-mail" name="email" required>
+            </div>
+            <div class="input-box">
+                <i class='bx bxs-lock-alt'></i>
+                <input type="password" id="password" placeholder=" mot de passe" name="password" required>
+            </div>
+    
+            <div class="remember-forgot-box">
+                <label for="remember">
+                    <input type="checkbox" id="remember">
+                    se souvenir de moi
+                </label>
+                <a href="#">Mot de oublier ?</a>
+            </div>
+    
+            <button type="submit" class="login-btn">se connecter</button>
+    
+            <p class="register">
+                Pas de compte ?
+                <a href="/register">s'inscrire</a>
+            </p>
+        </form>
+
+</body>
+</html>

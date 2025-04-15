@@ -1,0 +1,142 @@
+/*Fond de page blanc et centré*/
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 702px;
+    margin: 0;
+}
+
+/*Bandes à droite et à gauche de la page*/
+body::before,body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    width: 150px; /* Largeur des bandes */
+    height: 702px; /* Toute la hauteur de l'écran */
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: -1; /* Derrière le contenu */
+}
+
+/*Bord gauche*/
+body::before {
+    left: 0;
+    background-image: url('../static/fond_forum.avif'); /* Image de gauche */
+}
+
+/*Bord droit*/
+body::after {
+    right: 0;
+    background-image: url('../static/fond_forum.avif'); /* Image de droite */
+}
+
+/*Barre de navigation en ecart égaux avec fond blanc et bordur du dessus en blanc*/
+.navbar {
+    display: flex;
+    justify-content: space-around;
+    background: white;
+    width: 100%;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    border-top: 1px solid #000000;
+}
+
+/*Lien de barre de navigation sans décor et écriture noire*/
+.navbar a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+}
+
+/*Contenaire du profil avec fond blanc avec bordure arrondie*/
+.profile-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 1000px;
+    margin-top: 20px;
+}
+
+/*En-tête du profil (utilisateur et bio) écarté par gap de la photo de profil et bordure noire*/
+.profile-header {
+    border: 2px double black;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+/*Photo de profil en cercle*/
+.profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/*Bouton modifier en noir avec écriture blanc sous la photo de profil*/
+.edit-photo {
+    margin-right: 56%;
+    position:relative;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/*Nom utilisateur à coté de photo de profil en gras*/
+.username {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/*Nombres publications, suivis ou abonnés écarté équitablement par gap*/
+.stats {
+    display: flex;
+    gap: 30px;
+    margin-top: 5px;
+}
+
+/*Nombres publications, suivis ou abonnés en gras*/
+.stat span {
+    font-weight: bold;
+}
+
+/*Biographie en gris*/
+.bio {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+/*Lien du menu flottant des posts en gras et noir*/
+.tabs a {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/*Passage de souris pour lien du menu flottant des posts avec soulignement et écriture rouge*/
+.tabs a:hover{
+    color: red;
+    text-decoration: red underline double;
+}
+
+/*Menu flottant avec trait au dessus des posts en blanc avec un écart équilibré avec space-content*/
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+
